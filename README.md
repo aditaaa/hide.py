@@ -1,7 +1,7 @@
 # hide.py
 A steganographic program that encodes files in pictures.
 
-You will need Pillow library. To install just do `pip install Pillow` in the terminal.
+You will need Pillow and cryptography libraries. To install them, just do `pip install <library name>` in the terminal.
 
 Usage:
 

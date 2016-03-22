@@ -12,6 +12,7 @@ from PIL import Image
 
 class Header:
     MAX_FORMAT_LENGTH=8
+    magicnum = "hide"
     size = 0
     fformat = "txt"
 
@@ -65,8 +66,10 @@ def encode(image, data, filename, encryption=False, password=""):
                      else filename.split(os.extsep)[1]
 
     #Add the header to the file data
-    headerdata = struct.pack("I"+str(Header.MAX_FORMAT_LENGTH)+"s",\
-                             header.size, header.fformat)
+    headerdata = struct.pack("4s"+\
+                             "I"+\
+                             str(Header.MAX_FORMAT_LENGTH)+"s",\
+                             header.magicnum, header.size, header.fformat)
     filebytes = headerdata + data
 
     #Optional encryption step
@@ -121,10 +124,18 @@ def decode(image, password=""):
     #Create the header for reading
     header = Header()
 
-    headerdata = struct.unpack("I"+str(Header.MAX_FORMAT_LENGTH)+"s",
-                                data[:4+Header.MAX_FORMAT_LENGTH])
-    header.size = headerdata[0]
-    header.fformat = headerdata[1].strip("\x00")
+    headerdata = struct.unpack("4s"+\
+                               "I"+\
+                               str(Header.MAX_FORMAT_LENGTH)+"s",
+                                data[:4+4+Header.MAX_FORMAT_LENGTH])
+    header.magicnum = headerdata[0]
+    header.size = headerdata[1]
+    header.fformat = headerdata[2].strip("\x00")
+
+    #Verify integrity of recovered data
+    if header.magicnum != Header.magicnum:
+        print "There is no data to recover, quitting"
+        exit()
 
     data = data[4+Header.MAX_FORMAT_LENGTH:4+Header.MAX_FORMAT_LENGTH+header.size]
 

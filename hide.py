@@ -76,8 +76,8 @@ def encode(image, data, filename, encryption=False, password=""):
 
     #Ensure the image is large enough to hide the data
     if len(filebytes) > im.width*im.height:
-        print "Image to small to encode the file. \
-        You can store 1 byte per pixel."
+        print "Image too small to encode the file. \
+You can store 1 byte per pixel."
         exit()
 
     for i in range(len(filebytes)):
@@ -151,6 +151,11 @@ def encrypt(data, password, padding=0):
     The password is converted into a base64-encoded key which is then used in a
     symmetric encryption algorithm.
     """
+
+    if padding < 0:
+        print "Image too small to encode the file. \
+You can store 1 byte per pixel."
+        exit()
 
     password = bytes(password)
 

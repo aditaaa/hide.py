@@ -7,8 +7,6 @@ To install needed python libraries, just do this in the folder with requirements
 
 `pip install -r requirements.txt`
 
-You will need Pillow and cryptography libraries. To install them, just do `pip install <library name>` in the terminal.
-
 # Usage
 
 `hide.py [-h] -i IMAGE [-f FILE] -a ACTION [-p PASSWORD]`

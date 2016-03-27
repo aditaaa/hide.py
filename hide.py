@@ -53,12 +53,6 @@ def encode(image, data, filename, encryption=False, password=""):
     im = Image.open(image)
     px = im.load()
 
-    #Ensure the image is large enough to hide the data
-    if len(data) > im.width*im.height:
-        print "Image to small to encode the file. \
-        You can store 1 byte per pixel."
-        exit()
-
     #Create a header
     header = Header()
     header.size = len(data)
@@ -79,6 +73,12 @@ def encode(image, data, filename, encryption=False, password=""):
                                 padding=im.width*im.height - len(filebytes))
         else:
             print "Password is empty, encryption skipped"
+
+    #Ensure the image is large enough to hide the data
+    if len(filebytes) > im.width*im.height:
+        print "Image too small to encode the file. \
+You can store 1 byte per pixel."
+        exit()
 
     for i in range(len(filebytes)):
         coords = (i%im.width, i/im.width)
@@ -151,6 +151,11 @@ def encrypt(data, password, padding=0):
     The password is converted into a base64-encoded key which is then used in a
     symmetric encryption algorithm.
     """
+
+    if padding < 0:
+        print "Image too small to encode the file. \
+You can store 1 byte per pixel."
+        exit()
 
     password = bytes(password)
 
